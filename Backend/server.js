@@ -3,7 +3,7 @@ let mongoose = require("mongoose");
 let express = require("express");
 let cors = require("cors");
 let multer = require("multer");
-
+let jwt = require("jsonwebtoken");
 let storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads");
@@ -78,11 +78,14 @@ app.post("/register", upload.single("profilePic"), async (req, res) => {
 });
 
 
-app.post("/login",upload.none(),async(req,res)=>{
+app.post("/login",upload.none(), async(req,res)=>{
     console.log(req.body);
    let userDetailsArr= await User.find().and({email:req.body.email})
    if(userDetailsArr.length > 0){
         if(userDetailsArr[0].password === req.body.password){
+          // jwt encrypted
+          let encryptedCredentials = jwt.sign({email:req.body.email,password:req.body.password},"elections");
+
           let loggedInUserDetails ={
             firstName:userDetailsArr[0].firstName,
             lastName:userDetailsArr[0].lastName,
@@ -90,8 +93,7 @@ app.post("/login",upload.none(),async(req,res)=>{
             email:userDetailsArr[0].email,
             mobileNo:userDetailsArr[0].mobileNo,
             profilePic:userDetailsArr[0].profilePic,
-
-
+            token:encryptedCredentials,
           }
 
           res.json({status:"success",data:loggedInUserDetails});
@@ -103,6 +105,33 @@ app.post("/login",upload.none(),async(req,res)=>{
    }
 })
 
+app.post("/validateToken",upload.none(), async(req,res)=>{
+   // jwt decrypted
+  let decryptedCredentials= jwt.verify(req.body.token,"elections");
+
+  console.log(decryptedCredentials);
+
+  let userDetailsArr= await User.find().and({email:decryptedCredentials.email})
+  if(userDetailsArr.length > 0){
+       if(userDetailsArr[0].password === decryptedCredentials.password){
+
+         let loggedInUserDetails = {
+           firstName:userDetailsArr[0].firstName,
+           lastName:userDetailsArr[0].lastName,
+           age:userDetailsArr[0].age,
+           email:userDetailsArr[0].email,
+           mobileNo:userDetailsArr[0].mobileNo,
+           profilePic:userDetailsArr[0].profilePic,
+         }
+
+         res.json({status:"success",data:loggedInUserDetails});
+       }else{
+         res.json({status:"failure",msg:"Invalid Password"})
+        }
+    }else{
+      res.json({status:"failure",msg:"User doesnot Exist."})
+      }
+});
 
 // Step 8: call the function
 connectToMongoDB();
