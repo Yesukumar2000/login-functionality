@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { createStore } from 'redux';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import { Provider } from 'react-redux';
+import { thunk } from 'redux-thunk';
 
 // Step 1 - Create initial store object
 let initialStore = {
@@ -20,9 +21,34 @@ let reducer = (updatedStore = initialStore, dispatchedObj) => {
   } 
   return updatedStore;
 };
+let tasksReducer = (updatedStore = initialStore, dispatchedObj) => {
+  console.log('inside reducer');
+  console.log(dispatchedObj);
 
+  if (dispatchedObj.type === "addTask") {
+    return { ...updatedStore, userDetails: dispatchedObj.data };
+  }else  if (dispatchedObj.type === "submit") {
+    return { ...updatedStore, userDetails: dispatchedObj.data };
+  }   if (dispatchedObj.type === "deleteTask") {
+    return { ...updatedStore, userDetails: dispatchedObj.data };
+  } 
+  return updatedStore;
+};
+let leavesReducer = (updatedStore = initialStore, dispatchedObj) => {
+  console.log('inside reducer');
+  console.log(dispatchedObj);
+
+  if (dispatchedObj.type === "applyLeave") {
+    return { ...updatedStore, userDetails: dispatchedObj.data };
+  }else  if (dispatchedObj.type === "cancelLeave") {
+    return { ...updatedStore, userDetails: dispatchedObj.data };
+  }   if (dispatchedObj.type === "extendLeave") {
+    return { ...updatedStore, userDetails: dispatchedObj.data };
+  } 
+  return updatedStore;
+};
 // step 3 - create the store
-let store = createStore(reducer);
+let store = createStore(combineReducers({reducer,tasksReducer,leavesReducer}),applyMiddleware(thunk));
  
 let root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
