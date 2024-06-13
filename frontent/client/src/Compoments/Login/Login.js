@@ -34,60 +34,73 @@ let validateToken= async()=>{
 }
 
 
-  let validateLogin = async()=>{
+  // let validateLogin = async()=>{
     
-    let dataToSend = new FormData();
-    dataToSend.append("email",emailInputRef.current.value);
-    dataToSend.append("password",passwordInputRef.current.value);
-    let reqOptions ={
-      method:"POST",
-      body:dataToSend,
-    }
-    let JSONData= await fetch("http://localhost:7999/login",reqOptions);
-    let JSOData = await JSONData.json();
-    console.log(JSOData);
-    if(JSOData.status === "success"){
-      localStorage.setItem("token",JSOData.data.token);
+  //   let dataToSend = new FormData();
+  //   dataToSend.append("email",emailInputRef.current.value);
+  //   dataToSend.append("password",passwordInputRef.current.value);
+  //   let reqOptions ={
+  //     method:"POST",
+  //     body:dataToSend,
+  //   }
+  //   let JSONData= await fetch("http://localhost:7999/login",reqOptions);
+  //   let JSOData = await JSONData.json();
+  //   console.log(JSOData);
+  //   if(JSOData.status === "success"){
+  //     localStorage.setItem("token",JSOData.data.token);
 
-      dispatch({type:"login",data:JSOData.data});
-      navigate("/dashboard");
-    }else{
-      alert(JSOData.msg);
+  //     dispatch({type:"login",data:JSOData.data});
+  //     navigate("/dashboard");
+  //   }else{
+  //     alert(JSOData.msg);
+  //   }
+  // }
+  let validateLogin2 =()=>{
+    console.log("ValidateLogin2")
+    return async()=>{
+      let dataToSend = new FormData();
+      dataToSend.append("email",emailInputRef.current.value);
+      dataToSend.append("password",passwordInputRef.current.value);
+      let reqOptions ={
+        method:"POST",
+        body:dataToSend,
+      }
+      let JSONData = await fetch("http://localhost:7999/login",reqOptions);
+      let JSOData = await JSONData.json();
+      console.log(JSOData);
+      if(JSOData.status === "success"){
+        localStorage.setItem("token",JSOData.data.token);
+  
+        dispatch({type:"login",data:JSOData.data});
+        navigate("/dashboard");
+      }else{
+        alert(JSOData.msg);
+      }
     }
-  }
 
+
+  } 
   return (
-    <div>
-      <form>
-        <h2> Login</h2>
-
-        <div>
-          <label>Email</label>
-          <input ref={emailInputRef} type="email" placeholder="Email" />
-        </div>
-        <div>
-          <label>Password</label>
-          <input
-            ref={passwordInputRef}
-            type="text"
-            placeholder="password"></input>
-        </div>
-
-        <div>
-          <div>
-            <button
-              type="button"
-              onClick={() => {
-                // OnLoginUsingFD();
-                validateLogin();
-              }}>
-              Login
-            </button>
-          </div>
-        </div>
-      </form>
-       <Link to='/signup'>SignUp</Link>
-    </div>
+    <div className="container">
+    <form>
+      <h2>Login</h2>
+      <div>
+        <label>Email</label>
+        <input ref={emailInputRef} type="email" placeholder="Email" />
+      </div>
+      <div>
+        <label>Password</label>
+        <input ref={passwordInputRef} type="text" placeholder="Password" />
+      </div>
+      <div>
+        <button type="button" onClick={()=>{
+          // validateLogin
+             dispatch(validateLogin2());
+          }}>Login</button>
+      </div>
+    </form>
+    <div className="Link"><Link to='/signup'>Sign Up</Link></div>
+  </div>
   );
 }
 

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-
+import './TopNavigation.css';
 
 function TopNavigation() {
   
@@ -10,7 +10,7 @@ function TopNavigation() {
   })
   let navigate = useNavigate();
   useEffect(()=>{
-    if(storeObj && storeObj.userDetails && storeObj.userDetails.email){
+    if(storeObj && storeObj.reducer.userDetails && storeObj.reducer.userDetails.email){
       // navigate("/dashboard");
     }else{
       navigate("/");
@@ -18,13 +18,13 @@ function TopNavigation() {
   }, [storeObj, navigate]);
   return (
     <>
-     <nav className="top-nav">
-        <Link to="/dashboard" className="nav-link">DashBoard</Link>
-        <Link to="/tasks" className="nav-link">Tasks</Link>
-        <Link to="/editprofile" className="nav-link">EditProfile</Link>
-        <Link to="/" className="nav-link">LogOut</Link>
-      </nav>
-    </>
+    <nav className="top-nav">
+      <Link to="/dashboard" className="nav-link">DashBoard</Link>
+      <Link to="/tasks" className="nav-link">Tasks</Link>
+      <Link to="/editprofile" className="nav-link">EditProfile</Link>
+      <Link to="/" className="nav-link">LogOut</Link>
+    </nav>
+  </>
   );
 }
 
