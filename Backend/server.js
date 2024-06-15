@@ -8,6 +8,10 @@ let dotenv =require('dotenv')
 dotenv.config();
 let bcrypt = require("bcrypt");
 
+
+
+
+
 let storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads");
@@ -29,14 +33,23 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded());
 app.use('/uploads', express.static('uploads'));
+
+
 // Step 4: Connect to MongoDB
 let connectToMongoDB = async () => {
   try {
     await mongoose.connect(process.env.mdbUrl);
+    console.log("Successfully connected to MongoDB");
   } catch (error) {
     console.log("Unable to connect to MongoDB", error);
   }
 };
+let authorise = (req,res,next)=>{
+  console.log('Inside authorise');
+  console.log(req.header.authorization);
+  next();
+};
+app.use(authorise);
 
 // Step 5: Define User schema
 let userSchema = new mongoose.Schema({
