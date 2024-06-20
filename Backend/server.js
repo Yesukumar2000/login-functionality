@@ -10,8 +10,6 @@ let bcrypt = require("bcrypt");
 
 
 
-
-
 let storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads");
@@ -34,6 +32,8 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use('/uploads', express.static('uploads'));
 
+// To get client side build folder
+app.use(express.static(path.join(__dirname,"./frontend/client/build")));
 
 // Step 4: Connect to MongoDB
 let connectToMongoDB = async () => {
@@ -64,6 +64,10 @@ let userSchema = new mongoose.Schema({
 
 // Step 6: Create User model
 let User = mongoose.model("user", userSchema);
+
+app.use("*",(req,res)=>{
+  res.sendFile(path.join(__dirname,"./frontend/client/build/index.html"));
+})
 
 // Step 7:  POST API for user registration
 app.post("/register", upload.single("profilePic"), async (req, res) => {

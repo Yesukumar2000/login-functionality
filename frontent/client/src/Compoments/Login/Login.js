@@ -11,7 +11,7 @@ function Login() {
   let navigate = useNavigate();
 
   useEffect(() => {
-    axios.defaults.baseURL = "http://localhost:7999";
+    axios.defaults.baseURL = "";
     if (localStorage.getItem("token")) {
       validateToken();
       axios.defaults.headers.common['Authorization'] = localStorage.getItem("token")
@@ -26,7 +26,7 @@ function Login() {
       body: dataToSend,
     };
     let JSONData = await fetch(
-      "http://localhost:7999/validateToken",
+      "/validateToken",
       reqOptions
     );
     let JSOData = await JSONData.json();
@@ -58,7 +58,7 @@ function Login() {
     //   method:"POST",
     //   body:dataToSend,
     // }
-    // let JSONData= await fetch("http://localhost:7999/login",reqOptions);
+    // let JSONData= await fetch("/login",reqOptions);
     // let JSOData = await JSONData.json();
     // console.log(JSOData);
     // if(JSOData.status === "success"){
@@ -81,7 +81,7 @@ function Login() {
         method: "POST",
         body: dataToSend,
       };
-      let JSONData = await fetch("http://localhost:7999/login", reqOptions);
+      let JSONData = await fetch("/login", reqOptions);
       let JSOData = await JSONData.json();
       console.log(JSOData);
       if (JSOData.status === "success") {
